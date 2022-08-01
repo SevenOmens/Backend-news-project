@@ -1,16 +1,5 @@
-# Northcoders News API
-
-## Background
-
-We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
-
-Your database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
-
-## Kanban
-
-### Link to your Trello Board here: https://trello.com/b/7yiHe1nI
-
-To keep track of the tasks involved in this project we're going to use a kanban board. Ensure that you work on one _ticket_ at time. You can click on the ticket to find out more information about what is required for the feature. A ticket is not considered complete unless both the happy path and errors response are handled. You can make use of the checklist on each ticket to keep track of the errors you want to handle. You can also make use of [error-handling.md](error-handling.md) to consider the error codes we may wish to respond with.
+## Creating Environment Variables
+To create your environment variables so you can work on this project locally, create a .env.test file, and .env.development file, and add in to the files PGDATABASE=databasenamehere for the respective files. Make sure these files are added in to the git ignore file. 
 
 **Please ensure you work through the tickets in numerical order.**
 
