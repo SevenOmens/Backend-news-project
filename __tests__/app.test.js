@@ -21,13 +21,14 @@ describe("GET /api/topics", () => {
         const { topics } = body;
         expect(topics).toBeInstanceOf(Array);
       });
-  });
+  })
   it('responds with an array of topic objects with the slug properties and description', () => {
     return request(app)
     .get("/api/topics")
     .expect(200)
     .then(({ body }) => {
         const { topics } = body;
+        expect(topics.length).toBe(3)
         topics.forEach((topic) => {
           expect(topic).toEqual(
             expect.objectContaining({
@@ -38,7 +39,7 @@ describe("GET /api/topics", () => {
         });
       });
   })
-});
 
+})
 
 
