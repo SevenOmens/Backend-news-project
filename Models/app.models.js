@@ -7,9 +7,9 @@ exports.fetchTopics = () => {
     })
 }
 
-exports.fetchArticle = (ID) => {
+exports.fetchArticle = (id) => {
     return db
-    .query('SELECT * FROM articles WHERE article_id = $1', [ID])
+    .query('SELECT * FROM articles WHERE article_id = $1', [id])
     .then(({rows} ) => {
         const artID = rows
         if (artID.length === 0){
@@ -22,9 +22,9 @@ exports.fetchArticle = (ID) => {
     })
 }
 
-exports.updateArticle = (ID, votes) => {
+exports.updateArticle = (id, votes) => {
     return db
-    .query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [votes, ID])
+    .query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [votes, id])
     .then(({rows}) => {
         const artID = rows
         if (artID.length === 0){
@@ -37,3 +37,9 @@ exports.updateArticle = (ID, votes) => {
     })
 }
 
+exports.fetchUsers = () => {
+    return db
+    .query('SELECT * FROM users').then(({ rows }) => {
+        return rows
+    })
+}

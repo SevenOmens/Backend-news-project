@@ -8,7 +8,8 @@ app.use(express.json());
 const {
     getTopics,
     getArticle,
-    patchArticle
+    patchArticle,
+    getUsers
 } = require ('./Controllers/app.controller')
 
 const{
@@ -18,10 +19,14 @@ const{
 } = require ('./Errors/index')
 
 
-
+//GET methods
 app.get("/api/topics", getTopics)
 app.get("/api/articles/:article_id", getArticle)
+app.get("/api/users", getUsers)
+
+//PATCH methods
 app.patch("/api/articles/:article_id", patchArticle)
+
 
 
 app.use(handleCustomErrors)
