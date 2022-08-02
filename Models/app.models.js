@@ -37,3 +37,9 @@ exports.updateArticle = (ID, votes) => {
     })
 }
 
+exports.fetchUsers = () => {
+    return db
+    .query('SELECT * FROM users').then(({ rows }) => {
+        return rows
+    })
+}

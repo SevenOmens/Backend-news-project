@@ -124,7 +124,6 @@ describe('PATCH api/articles/:article_id', () => {
     .get(`/api/articles/${article_id}`)
     .expect(404)
     .then(({body}) => {
-      console.log(body)
       expect(body).toEqual({msg: 'No article found for article_id: 500'})
     })
   })
@@ -135,5 +134,25 @@ describe('PATCH api/articles/:article_id', () => {
     .then(({body}) => {
       expect(body).toEqual({msg: 'Invalid Endpoint'})
     })
+  })
+})
+
+describe('GET /api/users', () => {
+  it("Responds with an array of user objects with the username, name, and avatar_url properties", () => {
+    return request(app)
+    .get('/api/users')
+     .then(({ body }) => {
+        const { users } = body;
+        expect(users.length).toBe(4)
+        users.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String)
+            })
+          );
+        });
+      });
   })
 })
