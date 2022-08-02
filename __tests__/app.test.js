@@ -105,7 +105,7 @@ describe('PATCH api/articles/:article_id', () => {
     return request(app)
     .patch("/api/articles/4")
     .send(newVotes)
-    .expect(202)
+    .expect(200)
     .then(({body}) => {
       expect(body.article).toEqual({
         author: "rogersop",
