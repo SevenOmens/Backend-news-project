@@ -1,26 +1,29 @@
 const express = require("express");
 const app = express();
 const seed = require ('./db/seeds/seed')
-app.use(express.json());
+
 
 const {
     getTopics,
+    getArticle,
 } = require ('./Controllers/app.controller')
 
+const{
+    handleCustomErrors,
+    handleServerErrors,
+    handlePsqlErrors
+} = require ('./Errors/index')
 
 
 
 app.get("/api/topics", getTopics)
+app.get("/api/articles/:article_id", getArticle)
 
 
+app.use(handleCustomErrors)
+app.use(handlePsqlErrors)
+app.use(handleServerErrors)
 
-
-
-/////
-app.use((err, req, res, next) => {
-      console.log(err);
-  res.status(500).send("Server Error!");
-});
 
 
 
