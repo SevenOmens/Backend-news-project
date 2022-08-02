@@ -22,7 +22,7 @@ describe("GET /api/topics", () => {
         expect(topics).toBeInstanceOf(Array);
       });
   })
-  it('responds with an array of topic objects with the slug properties and description', () => {
+  it("responds with an array of topic objects with the slug properties and description", () => {
     return request(app)
     .get("/api/topics")
     .expect(200)
@@ -67,18 +67,73 @@ describe("GET /api/articles/:article_id", () => {
     return request(app)
     .get(`/api/articles/${article_id}`)
     .expect(404)
-    .then(({_body}) => {
-      expect(_body).toEqual({msg: 'No article found for article_id: 500'})
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'No article found for article_id: 500'})
     })
   })
-  it("responds with status 400, msg: 'Invalid Endpoint' when passed a bad endpoint", () => {
+  it("Responds with status 400, msg: 'Invalid Endpoint' when passed a bad endpoint", () => {
     return request(app)
     .get('/api/articles/banana')
     .expect(400)
-    .then(({_body}) => {
-      expect(_body).toEqual({msg: 'Invalid Endpoint'})
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'Invalid Endpoint'})
     })
   })
 })
 
-
+describe('PATCH api/articles/:article_id', () => {
+  it("Responds with the specified article, with the votes property updated in line with the inc_votes when the inc_votes property is a positive number", () => {
+    const newVotes = {inc_votes: 50}
+    return request(app)
+    .patch("/api/articles/4")
+    .send(newVotes)
+    .expect(202)
+    .then(({body}) => {
+      expect(body.article).toEqual({
+        author: "rogersop",
+          title: "Student SUES Mitch!",
+          article_id: 4,
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          topic: "mitch",
+          created_at: "2020-05-06T01:14:00.000Z",
+          votes: 50
+      })
+    })
+  })
+  it("Responds with the specified article, with the votes property updated in line with the inc_votes when the inc_votes property is a negative number", () => {
+    const newVotes = {inc_votes: -50}
+    return request(app)
+    .patch("/api/articles/4")
+    .send(newVotes)
+    .expect(202)
+    .then(({body}) => {
+      expect(body.article).toEqual({
+        author: "rogersop",
+          title: "Student SUES Mitch!",
+          article_id: 4,
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          topic: "mitch",
+          created_at: "2020-05-06T01:14:00.000Z",
+          votes: -50
+      })
+    })
+  })
+  it("responds with status 404, msg: No article found for article_id: 500 when passed an endpoint that doesn't exist", () => {
+      const article_id = 500
+    return request(app)
+    .get(`/api/articles/${article_id}`)
+    .expect(404)
+    .then(({body}) => {
+      console.log(body)
+      expect(body).toEqual({msg: 'No article found for article_id: 500'})
+    })
+  })
+   it("Responds with status 400, msg: 'Invalid Endpoint' when passed a bad endpoint", () => {
+    return request(app)
+    .get('/api/articles/banana')
+    .expect(400)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'Invalid Endpoint'})
+    })
+  })
+})

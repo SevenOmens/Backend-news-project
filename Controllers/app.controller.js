@@ -1,6 +1,7 @@
 const {
     fetchTopics,
-    fetchArticle
+    fetchArticle,
+    updateArticle
 } = require('../Models/app.models')
 
 
@@ -22,4 +23,16 @@ exports.getArticle = (req, res, next) => {
     .catch((err) => {
         next(err)
     })  
+}
+
+exports.patchArticle = (req, res, next) => {
+    const article = req.params.article_id
+    const newVotes = req.body.inc_votes
+    updateArticle(article, newVotes).then((article) => {
+        res.status(202)
+        res.send({article})
+    })
+    .catch((err) => {
+        next(err)
+    })
 }

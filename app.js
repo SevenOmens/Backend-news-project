@@ -1,11 +1,14 @@
 const express = require("express");
 const app = express();
 const seed = require ('./db/seeds/seed')
+app.use(express.json());
+
 
 
 const {
     getTopics,
     getArticle,
+    patchArticle
 } = require ('./Controllers/app.controller')
 
 const{
@@ -18,6 +21,7 @@ const{
 
 app.get("/api/topics", getTopics)
 app.get("/api/articles/:article_id", getArticle)
+app.patch("/api/articles/:article_id", patchArticle)
 
 
 app.use(handleCustomErrors)
