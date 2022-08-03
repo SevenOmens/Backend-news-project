@@ -62,6 +62,28 @@ describe("GET /api/articles/:article_id", () => {
       )
     })
   })
+  it("Status 200, responds with a single article with the comment_count property", () => {
+        const article_id = 4
+    return request(app)
+    .get(`/api/articles/${article_id}`)
+    .expect(200)
+    .then(( {body} ) => {
+      const { result } = body
+      expect(result).toEqual(
+        expect.objectContaining({
+          author: "rogersop",
+          title: "Student SUES Mitch!",
+          article_id: 4,
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          topic: "mitch",
+          created_at: "2020-05-06T01:14:00.000Z",
+          votes: 0,
+          comment_count: 0
+        })
+      )
+    })
+ 
+  })
   it("Responds with status: 404, msg: 'No article found for article_id: 500' when passed an endpoint that doesnt exist", () => {
     const article_id = 500
     return request(app)
@@ -105,7 +127,7 @@ describe('PATCH api/articles/:article_id', () => {
     return request(app)
     .patch("/api/articles/4")
     .send(newVotes)
-    .expect(200)
+    .expect(202)
     .then(({body}) => {
       expect(body.article).toEqual({
         author: "rogersop",
