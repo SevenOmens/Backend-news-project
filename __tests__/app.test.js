@@ -3,6 +3,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const testData = require('../db/data/test-data')
+const jest_sorted = require('jest-sorted')
 
 beforeEach(() => {
   return seed(testData);
@@ -163,6 +164,7 @@ describe('GET /api/users', () => {
   it("Responds with an array of user objects with the username, name, and avatar_url properties", () => {
     return request(app)
     .get('/api/users')
+    .expect(200)
      .then(({ body }) => {
         const { users } = body;
         expect(users.length).toBe(4)
@@ -175,6 +177,32 @@ describe('GET /api/users', () => {
             })
           );
         });
+      });
+  })
+})
+
+describe('GET /api/articles', () => {
+  it("Responds with an array of user objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({ body }) => {
+        const { articles } = body;
+        expect(articles.length).toBe(12)
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+             author: expect.any(String),
+             title: expect.any(String),
+             article_id: expect.any(Number),
+             topic: expect.any(String),
+             created_at: expect.any(String),
+             votes: expect.any(Number),
+             comment_count: expect.any(Number)
+            })
+          );
+        });
+        expect(articles).toBeSortedBy('created_at', {descending: true})
       });
   })
 })

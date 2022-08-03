@@ -11,6 +11,7 @@ exports.fetchArticle = (id) => {
     return db
     .query('SELECT articles.*, COUNT (comments.article_id) :: INTEGER AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id WHERE articles.article_id=$1 GROUP BY articles.article_id', [id])
     .then(({rows} ) => {
+        const artID = rows
         if (artID.length === 0){
             return Promise.reject({
                 status:404,
@@ -40,6 +41,13 @@ exports.updateArticle = (id, votes) => {
 exports.fetchUsers = () => {
     return db
     .query('SELECT * FROM users').then(({ rows }) => {
+        return rows
+    })
+}
+
+exports.fetchAllArticles = () => {
+    return db
+    .query('SELECT articles.*, COUNT (comments.article_id) :: INTEGER AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id  GROUP BY articles.article_id ORDER BY created_at DESC').then(({rows}) => {
         return rows
     })
 }
