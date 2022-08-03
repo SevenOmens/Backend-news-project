@@ -3,10 +3,11 @@ const {
     fetchArticle,
     updateArticle,
     fetchUsers,
-    fetchAllArticles
+    fetchAllArticles,
+    fetchArticleComments
 } = require('../Models/app.models')
 
-
+const {checkIfArticleExists} = require('../Utilities/utilities')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then((topics) => {
@@ -51,6 +52,16 @@ exports.getUsers = (req, res, next)  => {
 exports.getAllArticles = (req, res, next) => {
     fetchAllArticles().then((articles)=> {
         res.send({articles})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.getArticleComments = (req, res, next) => {
+    const article = req.params.article_id
+    Promise.all([fetchArticleComments(article), checkIfArticleExists(article)]).then((result) => {
+        res.send(result[0])
     })
     .catch((err) => {
         next(err)

@@ -9,7 +9,9 @@ exports.fetchTopics = () => {
 
 exports.fetchArticle = (id) => {
     return db
-    .query('SELECT articles.*, COUNT (comments.article_id) :: INTEGER AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id WHERE articles.article_id=$1 GROUP BY articles.article_id', [id])
+    .query(`SELECT articles.*, COUNT (comments.article_id) :: INTEGER AS comment_count FROM articles  
+    LEFT JOIN comments ON comments.article_id = articles.article_id 
+    WHERE articles.article_id=$1 GROUP BY articles.article_id`, [id])
     .then(({rows} ) => {
         const artID = rows
         if (artID.length === 0){
@@ -47,7 +49,16 @@ exports.fetchUsers = () => {
 
 exports.fetchAllArticles = () => {
     return db
-    .query('SELECT articles.*, COUNT (comments.article_id) :: INTEGER AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id  GROUP BY articles.article_id ORDER BY created_at DESC').then(({rows}) => {
+    .query('SELECT articles.*, COUNT (comments.article_id) :: INTEGER AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id  GROUP BY articles.article_id ORDER BY created_at DESC')
+    .then(({rows}) => {
+        return rows
+    })
+}
+
+exports.fetchArticleComments = (id) => {
+    return db
+    .query('SELECT * FROM comments WHERE article_id = $1', [id])
+    .then(({rows}) => {
         return rows
     })
 }
