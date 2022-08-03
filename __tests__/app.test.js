@@ -206,3 +206,44 @@ describe('GET /api/articles', () => {
       });
   })
 })
+
+describe('GET /api/articles/:article_id/comments', () => {
+  it("Responds with an array of comment objects for the article_id with the comment_id, votes, created_at, author and body properties", () => {
+    const article_id = 5
+    return request(app)
+    .get(`/api/articles/${article_id}/comments`)
+    .expect(200)
+        .then(({ body }) => {
+        expect(body.length).toBe(2)
+        body.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+             comment_id: expect.any(Number),
+             votes: expect.any(Number),
+             created_at: expect.any(String),
+             author: expect.any(String),
+             body: expect.any(String)
+            })
+          );
+        });
+      });
+  })
+   it("Responds with status 400, msg: 'Invalid Endpoint' when passed a bad endpoint", () => {
+    return request(app)
+    .get('/api/articles/banana/comments')
+    .expect(400)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'Invalid Endpoint'})
+    })
+  })
+    it("responds with status 404, msg: No article found for article_id: 500 when passed an endpoint that doesn't exist", () => {
+      const article_id = 500
+    return request(app)
+    .get(`/api/articles/${article_id}/comments`)
+    .expect(404)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'No article found for article_id: 500'})
+    })
+  })
+})
+
