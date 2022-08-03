@@ -2,7 +2,8 @@ const {
     fetchTopics,
     fetchArticle,
     updateArticle,
-    fetchUsers
+    fetchUsers,
+    fetchAllArticles
 } = require('../Models/app.models')
 
 
@@ -41,6 +42,15 @@ exports.patchArticle = (req, res, next) => {
 exports.getUsers = (req, res, next)  => {
     fetchUsers().then((users) => {
         res.send({users})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.getAllArticles = (req, res, next) => {
+    fetchAllArticles().then((articles)=> {
+        res.send({articles})
     })
     .catch((err) => {
         next(err)
