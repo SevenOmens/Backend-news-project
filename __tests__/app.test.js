@@ -113,8 +113,7 @@ describe('PATCH api/articles/:article_id', () => {
     .expect(202)
     .then(({body}) => {
       expect(body.article).toEqual({
-        author: "rogersop",
-          title: "Student SUES Mitch!",
+        author: "rogersop",          title: "Student SUES Mitch!",
           article_id: 4,
           body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
           topic: "mitch",
@@ -247,3 +246,68 @@ describe('GET /api/articles/:article_id/comments', () => {
   })
 })
 
+describe('POST /api/articles/:article_id/comments', () => {
+  it("Responds with status 201 and the posted comment", () => {
+    const newComment = {
+      username: "lurker",
+      body: "This article is great"
+    }
+    return request(app)
+    .post('/api/articles/5/comments')
+    .send(newComment)
+    .expect(200)
+    .then(({ body}) => {
+      expect(body.comment).toEqual({
+        comment_id: expect.any(Number),
+             votes: expect.any(Number),
+             created_at: expect.any(String),
+             author: "lurker",
+             body: "This article is great",
+             article_id: 5
+      })
+    })
+  })
+     it("Responds with status 400, msg: 'Invalid Endpoint' when passed a bad endpoint", () => {
+    return request(app)
+    .get('/api/articles/banana/comments')
+    .expect(400)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'Invalid Endpoint'})
+    })
+  })
+      it("Responds with status 404, msg: No article found for article_id: 500 when passed an endpoint that doesn't exist", () => {
+      const article_id = 500
+    return request(app)
+    .get(`/api/articles/${article_id}/comments`)
+    .expect(404)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'No article found for article_id: 500'})
+    })
+  })
+  it("Responds with status 400 msg: 'Comment must have more than 0 characters to post on an article'", () => {
+     const badComment = {
+      username: "lurker",
+      body: ""
+    }
+     return request(app)
+    .post('/api/articles/5/comments')
+    .send(badComment)
+    .expect(400)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'Comment must have more than 0 characters to post on an article'})
+    })
+  })
+  it("Responds with status 400 msg: 'You must be logged in to post a comment. Please log in or register to continue the conversation' when the user doesn't exist", () => {
+    const badUser = {
+      username: "News_lover",
+      body: "I want to comment on this article but I cant :("
+    }
+      return request(app)
+    .post('/api/articles/5/comments')
+    .send(badUser)
+    .expect(400)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'You must be logged in to post a comment. Please log in or register to continue the conversation'})
+    })
+  })
+})
