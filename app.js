@@ -11,7 +11,8 @@ const {
     patchArticle,
     getUsers,
     getAllArticles,
-    getArticleComments
+    getArticleComments,
+    postNewComment
 } = require ('./Controllers/app.controller')
 
 const{
@@ -31,6 +32,8 @@ app.get("/api/articles/:article_id/comments", getArticleComments)
 //PATCH methods
 app.patch("/api/articles/:article_id", patchArticle)
 
+//POST methods
+app.post("/api/articles/:article_id/comments", postNewComment)
 
 
 app.use(handleCustomErrors)

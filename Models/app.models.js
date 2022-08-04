@@ -62,3 +62,22 @@ exports.fetchArticleComments = (id) => {
         return rows
     })
 }
+
+exports.postComment = (id, comment) => {
+     const commBody = comment.body 
+     const commAuth = comment.username
+     if(commBody.length === 0){
+        return Promise.reject({
+            status: 400,
+            msg: 'Comment must have more than 0 characters to post on an article'
+        })
+     }
+     return db
+   .query( `INSERT INTO comments (body, author, article_id) 
+    VALUES ($1, $2, $3) RETURNING *;`, [commBody, commAuth, id])
+    .then(({rows})=> {
+       return rows[0]
+    })
+
+  
+}

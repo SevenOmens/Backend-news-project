@@ -4,10 +4,12 @@ const {
     updateArticle,
     fetchUsers,
     fetchAllArticles,
-    fetchArticleComments
+    fetchArticleComments,
+    postComment
 } = require('../Models/app.models')
 
-const {checkIfArticleExists} = require('../Utilities/utilities')
+const {checkIfArticleExists,
+} = require('../Utilities/utilities')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then((topics) => {
@@ -62,6 +64,18 @@ exports.getArticleComments = (req, res, next) => {
     const article = req.params.article_id
     Promise.all([fetchArticleComments(article), checkIfArticleExists(article)]).then((result) => {
         res.send(result[0])
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.postNewComment= (req, res, next) => {
+    const article = req.params.article_id
+    const newComment = req.body
+   postComment(article, newComment)
+    .then((result) => {
+        res.send({comment: result})
     })
     .catch((err) => {
         next(err)
