@@ -14,16 +14,3 @@ exports.checkIfArticleExists = (id) => {
     })
 }
 
-exports.checkIfUserRegistered = (user) => {
-    return db
-    .query('SELECT * FROM users WHERE username= $1', [user])
-    .then(({rows}) => {
-        const userCheck = rows
-        if(userCheck.length === 0){
-            return Promiuse.reject ({
-                status:400,
-                msg: 'You must be logged in to post a comment. Please log in or register to continue the conversation'
-            })
-        }
-    })
-}

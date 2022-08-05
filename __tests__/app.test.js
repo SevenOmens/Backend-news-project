@@ -181,12 +181,11 @@ describe('GET /api/users', () => {
 })
 
 describe('GET /api/articles', () => {
-  it("Responds with an array of user objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order", () => {
+  it("Responds with an array of article objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order", () => {
     return request(app)
     .get("/api/articles")
     .expect(200)
-    .then(({ body }) => {
-        const { articles } = body;
+    .then(({ body: articles }) => {
         expect(articles.length).toBe(12)
         articles.forEach((article) => {
           expect(article).toEqual(
@@ -311,3 +310,142 @@ describe('POST /api/articles/:article_id/comments', () => {
     })
   })
 })
+
+describe('GET /api/articles with queries', () => {
+  it("Responds with status 200 Order results by created_at", () => {
+    return request(app)
+    .get("/api/articles?sort_by=created_at")
+    .expect(200)
+    .then(({body: articles}) => {
+      expect(articles).toBeSortedBy('created_at', {descending: true})
+    })
+  })
+   it("Responds with status 200 Order results by comment count", () => {
+    return request(app)
+    .get("/api/articles?sort_by=comment_count")
+    .expect(200)
+    .then(({body: articles}) => {
+      expect(articles).toBeSortedBy('comment_count', {descending: true})
+    })
+  })
+  it("Responds with status 200 Order results by votes", () => {
+    return request(app)
+    .get("/api/articles?sort_by=votes")
+    .expect(200)
+    .then(({body: articles}) => {
+      expect(articles).toBeSortedBy('votes', {descending: true})
+    })
+  })
+  it("Responds with status 200 Order results by author", () => {
+    return request(app)
+    .get("/api/articles?sort_by=author")
+    .expect(200)
+    .then(({body: articles}) => {
+      expect(articles).toBeSortedBy('author', {descending: true})
+    })
+  })
+  it("Responds with status 200 Order results by votes in ascending order", () => {
+    return request(app)
+    .get("/api/articles?sort_by=votes&order=ASC")
+    .expect(200)
+    .then(({body: articles}) => {
+      expect(articles).toBeSortedBy('votes')
+    })
+  })
+  it("Responds with status 200 Order results by author in ascending order", () => {
+    return request(app)
+    .get("/api/articles?sort_by=author&order=ASC")
+    .expect(200)
+    .then(({body: articles}) => {
+      expect(articles).toBeSortedBy('author')
+    })
+  })
+  it("Responds with status 400 msg: 'Not valid sort by criteria' when passed a sort_by clause that doesnt exist", () => {
+    return request(app)
+    .get("/api/articles?sort_by=ferrets")
+    .expect(400)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'Not valid sort by criteria'})
+    })
+  })
+   it("Responds with status 200 Filters articles by the topic passed in the query", () => {
+    return request(app)
+    .get("/api/articles?topic=mitch")
+    .expect(200)
+    .then(({ body: articles }) => {
+        expect(articles.length).toBe(11)
+        articles.forEach((article) => {
+          expect(article).toMatchObject(
+            ({
+              title: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              topic: "mitch"
+            })
+          );
+        });
+      })
+    })
+      it("Responds with status 400 msg: 'No articles match this topic' when passed a topic clause that doesnt exist", () => {
+    return request(app)
+    .get("/api/articles?topic=ferrets")
+    .expect(400)
+    .then(({body}) => {
+      expect(body).toEqual({msg: 'No articles match this topic'})
+    })
+  })
+    it("Responds with status 200 Filter articles by mitch topic,order results by votes in ascending order ", () => {
+    return request(app)
+    .get("/api/articles?sort_by=votes&order=ASC&topic=mitch")
+    .expect(200)
+    .then(({body: articles}) => {
+      expect(articles).toBeSortedBy('votes')
+    })
+  })
+  it("Responds with an array of article objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({ body: articles }) => {
+        expect(articles.length).toBe(12)
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+             author: expect.any(String),
+             title: expect.any(String),
+             article_id: expect.any(Number),
+             topic: expect.any(String),
+             created_at: expect.any(String),
+             votes: expect.any(Number),
+             comment_count: expect.any(Number)
+            })
+          );
+        });
+        expect(articles).toBeSortedBy('created_at', {descending: true})
+      });
+  })
+  it("Responds with an array of article objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order when passed in queries that don't match anything in the database", () => {
+    return request(app)
+    .get("/api/articles?ferrets=cute")
+    .expect(200)
+    .then(({ body: articles }) => {
+        expect(articles.length).toBe(12)
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+             author: expect.any(String),
+             title: expect.any(String),
+             article_id: expect.any(Number),
+             topic: expect.any(String),
+             created_at: expect.any(String),
+             votes: expect.any(Number),
+             comment_count: expect.any(Number)
+            })
+          );
+        });
+        expect(articles).toBeSortedBy('created_at', {descending: true})
+      });
+  })
+  })

@@ -52,8 +52,12 @@ exports.getUsers = (req, res, next)  => {
 }
 
 exports.getAllArticles = (req, res, next) => {
-    fetchAllArticles().then((articles)=> {
-        res.send({articles})
+    const queryObj = req.query 
+    const sortBy = queryObj.sort_by
+    const orderBy = queryObj.order
+    const topicFilter = queryObj.topic
+    fetchAllArticles(sortBy, orderBy, topicFilter).then((articles)=> {
+        res.send(articles)
     })
     .catch((err) => {
         next(err)
