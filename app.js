@@ -25,9 +25,9 @@ const{
 
 //GET methods
 app.get("/api/topics", getTopics)
-app.get("/api/articles/:article_id", getArticle)
-app.get("/api/users", getUsers)
 app.get("/api/articles", getAllArticles)
+app.get("/api/users", getUsers)
+app.get("/api/articles/:article_id", getArticle)
 app.get("/api/articles/:article_id/comments", getArticleComments)
 
 //PATCH methods
