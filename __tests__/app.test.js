@@ -310,6 +310,7 @@ describe('POST /api/articles/:article_id/comments', () => {
     })
   })
 })
+
 describe('GET /api/articles with queries', () => {
   it("Responds with status 200 Order results by created_at", () => {
     return request(app)
@@ -402,5 +403,49 @@ describe('GET /api/articles with queries', () => {
     .then(({body: articles}) => {
       expect(articles).toBeSortedBy('votes')
     })
+  })
+  it("Responds with an array of article objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({ body: articles }) => {
+        expect(articles.length).toBe(12)
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+             author: expect.any(String),
+             title: expect.any(String),
+             article_id: expect.any(Number),
+             topic: expect.any(String),
+             created_at: expect.any(String),
+             votes: expect.any(Number),
+             comment_count: expect.any(Number)
+            })
+          );
+        });
+        expect(articles).toBeSortedBy('created_at', {descending: true})
+      });
+  })
+  it("Responds with an array of article objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order when passed in queries that don't match anything in the database", () => {
+    return request(app)
+    .get("/api/articles?ferrets=cute")
+    .expect(200)
+    .then(({ body: articles }) => {
+        expect(articles.length).toBe(12)
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+             author: expect.any(String),
+             title: expect.any(String),
+             article_id: expect.any(Number),
+             topic: expect.any(String),
+             created_at: expect.any(String),
+             votes: expect.any(Number),
+             comment_count: expect.any(Number)
+            })
+          );
+        });
+        expect(articles).toBeSortedBy('created_at', {descending: true})
+      });
   })
   })
