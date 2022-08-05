@@ -404,7 +404,7 @@ describe('GET /api/articles with queries', () => {
       expect(articles).toBeSortedBy('votes')
     })
   })
-  it("Responds with an array of article objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order", () => {
+  it("Responds with an array of article objects with the author, title, article_id, topic, created_at, votes and comment_count properties, sorted by date in descending order when no queries are passed", () => {
     return request(app)
     .get("/api/articles")
     .expect(200)
@@ -449,3 +449,19 @@ describe('GET /api/articles with queries', () => {
       });
   })
   })
+
+  describe('DELETE /api/comments/:comment_id', () => {
+    it("Responds with status 204 no content", () => {
+      return request(app)
+      .delete('/api/comments/6')
+      .expect(204)
+    })
+    it("responds with status 404, msg: 'Invalid Endpoint when passed a comment_id that is invalid", () => {
+      return request(app)
+      .delete('/api/comments/ferret')
+      .expect(400)
+      .then(({body}) => {
+      expect(body).toEqual({msg: 'Invalid Endpoint'})
+    })
+  })
+})

@@ -5,7 +5,8 @@ const {
     fetchUsers,
     fetchAllArticles,
     fetchArticleComments,
-    postComment
+    postComment,
+    removeComment
 } = require('../Models/app.models')
 
 const {checkIfArticleExists,
@@ -80,6 +81,16 @@ exports.postNewComment= (req, res, next) => {
    postComment(article, newComment)
     .then((result) => {
         res.send({comment: result})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.deleteComment = (req, res, next) => {
+    const comment = req.params.comment_id
+    removeComment(comment).then(() => {
+        res.sendStatus(204)
     })
     .catch((err) => {
         next(err)

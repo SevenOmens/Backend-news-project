@@ -12,7 +12,8 @@ const {
     getUsers,
     getAllArticles,
     getArticleComments,
-    postNewComment
+    postNewComment,
+    deleteComment
 } = require ('./Controllers/app.controller')
 
 const{
@@ -34,6 +35,9 @@ app.patch("/api/articles/:article_id", patchArticle)
 
 //POST methods
 app.post("/api/articles/:article_id/comments", postNewComment)
+
+//DELETE methods
+app.delete("/api/comments/:comment_id", deleteComment)
 
 
 app.use(handleCustomErrors)

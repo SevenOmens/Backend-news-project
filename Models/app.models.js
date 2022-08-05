@@ -136,3 +136,11 @@ exports.postComment = (id, comment) => {
 
 
 }
+
+exports.removeComment = (comment) => {
+    return db
+    .query('DELETE FROM comments WHERE comment_id=$1', [comment])
+    .then((result) => {
+        return result
+    })
+}
