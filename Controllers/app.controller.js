@@ -6,11 +6,19 @@ const {
     fetchAllArticles,
     fetchArticleComments,
     postComment,
-    removeComment
+    removeComment,
+    fetchEndpoints
 } = require('../Models/app.models')
 
 const {checkIfArticleExists,
 } = require('../Utilities/utilities')
+
+exports.getEndpoints = (req, res, next) => {
+    fetchEndpoints().then((endpoints)=> {
+       
+        res.send({endpoints: JSON.parse(endpoints)})
+    })
+}
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then((topics) => {

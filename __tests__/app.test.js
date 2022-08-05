@@ -4,6 +4,8 @@ const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const testData = require('../db/data/test-data')
 const jest_sorted = require('jest-sorted')
+const endpointsFile = require('../endpoints.json')
+
 
 beforeEach(() => {
   return seed(testData);
@@ -12,6 +14,30 @@ beforeEach(() => {
 afterAll(() => {
 return db.end();
 });
+
+describe("GET /api", () => {
+  it("Responds with an object containing all endpoints", () => {
+     return request(app)
+      .get("/api")
+      .expect(200)
+    .then(({ body}) => {
+      const {endpoints} = body
+        expect(endpoints).toEqual(endpointsFile)
+      });
+  })
+})
+
+describe('ALL /*', () => {
+  it("Responds with status 404 msg: 'URL not found' when passed an endpoint that doesnt exist", () => {
+    return request(app)
+    .get("/ferrets")
+    .expect(404)
+      .then(({body}) => {
+        console.log(body)
+      expect(body).toEqual({msg: 'URL not found'})
+    })
+  })
+})
 
 describe("GET /api/topics", () => {
   it("Responds with an array", () => {
