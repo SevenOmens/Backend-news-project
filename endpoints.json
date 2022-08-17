@@ -23,5 +23,82 @@
         }
       ]
     }
+  },
+  "GET /api/users": {
+    "description": "Serves a user",
+    "queries": [],
+    "exampleResponse": {
+      "user": [
+        {
+          "username": "News_lover",
+          "name": "pete",
+          "avatar_url": "www.thisisaurl.com/picture.png"
+        }
+      ]
+    }
+  },
+  "GET /api/users/:article_id" : {
+    "description": "Returns an article based on article_id",
+    "queries" : [],
+    "exampleResponse": {
+       "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": 1527695953341
+    }
+  },
+  "GET /api/articles/:article_id/comments" : {
+    "description": "Returns an array of comment objects based on the article_id",
+    "queries": [],
+    "exampleResponse": [
+        {
+    "body": " I carry a log — yes. Is it funny to you? It is not to me.",
+    "votes": -100,
+    "author": "icellusedkars",
+    "article_id": 1,
+    "created_at": 1582459260000
+         },
+      {
+    "body": "I hate streaming noses",
+    "votes": 0,
+    "author": "icellusedkars",
+    "article_id": 1,
+    "created_at": 1604437200000
+      }
+    ]
+  },
+  "PATCH /api/articles/:article_id" : {
+    "description": "Changes an articles votes value based on the parameter passed and returns the updated article",
+    "queries": [],
+    "exampleResponse": {
+         
+    "body": "I hate streaming noses",
+    "votes": 500,
+    "author": "icellusedkars",
+    "article_id": 1,
+    "created_at": 1604437200000
+      }
+    },
+  "POST /api/articles/:article_id/comments" : {
+    "description": "Posts a new comment based on the article_id",
+    "queries": [],
+    "exampleResponse": {
+      
+    "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+    "votes": 16,
+    "author": "butter_bridge",
+    "article_id": 9,
+    "created_at": 1586179020000
+  
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Removes a comment from the databased based on the comment_id",
+    "queries": [],
+    "exampleResponse": {
+      "msg": "No content"
+    }
   }
 }
+
